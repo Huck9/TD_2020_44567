@@ -105,6 +105,15 @@ complex<double>* dft(double* tab, const int N) {
 	return dtf;
 }
 
+double* Mk(complex<double>* X, const int N) {
+	double* M = new double[N];
+	for (int i = 0; i < N; i++)
+	{
+		M[i] = sqrt(pow(X[i].real(), 2) + pow(X[i].imag(), 2));
+	}
+	return M;
+}
+
 int main() {
 	
 	int min = 0;
@@ -112,11 +121,12 @@ int main() {
 	double a = 7;
 	double b = 6;
 	double c = 5;
-	double deltaT = 1 / 1000.;
+	double deltaT = 1 / 100.;
 	int length = (max - min) / deltaT;
 	double* tableX = new double[length];
 	double* tableY = new double[length];
 	double xtmp = min;
+
 	for (int i = 0; i < length; i++)
 	{
 		tableX[i] = xtmp;
@@ -124,8 +134,19 @@ int main() {
 		xtmp += deltaT;
 	}
 
-	complex < double >* DFT = dft(tableY, pow(2, 12));
+	int size = pow(2, 12);
+	complex<double>* X = new complex<double>[size];
+	X = dft(tableY,size);
+	double* M = new double[size];
+	M = Mk(X, size);
+	double* Fk = new double[size];
 
-	GenerateData(tableX, tableY, length + 1, "dft");
+	for (int i = 0; i < size; i++)
+	{
+		Fk[i] = (double)i * (1 / deltaT) / size;
+	}
+
+	GenerateData(Fk, M, size, "dft.plt");
+
 	return 0;
  }
