@@ -23,9 +23,10 @@ void GenerateData(T* Xtable, T* Ytable, int length, string name)
 	outfile.close();
 }
 
-double s(double t, double f, double fi) {
-	return (sin(2 * M_PI * t * f + fi));
+double s(double t) {
+	return (sin(2 * M_PI * t * B + (C * M_PI)));
 }
+
 void squareFunction(int min, int max, double deltat) {
 
 	int lenght = (max - min) / deltat;
@@ -72,9 +73,9 @@ double U(double x) {
 
 double V(double x) {
 	if (x < 0.22) {
-		return((1 - 7 * x) * sin((2 * M_PI * 10) / (x + 0.4)));
+		return((1 - 7 * x) * sin((2 * M_PI * x * 10) / (x + 0.4)));
 	}
-	else if (x < 0.77)
+	else if (x < 0.7)
 	{
 		return(0.63 * x * sin(125 * x));
 	}
@@ -105,6 +106,25 @@ complex<double>* dft(double* tab, const int N) {
 	return dtf;
 }
 
+double* idtf(complex<double> *tab, const int N) {
+	complex<double>* idtf = new complex<double>[N];
+	complex<double> i(0.0, 1);
+	for (int n = 0; n < N; n++) {
+		for (int k = 0; k < N; k++) {
+			double m = 2 * M_PI * k * n / N;
+			idtf[k] += (tab[n] * complex<double>(pow(exp(1.0),i*m)));
+		}
+		idtf[n] *= 1 / N;
+	}
+	double* IDTF = new double[N];
+	for (int i = 0; i < N; i++)
+	{
+		IDTF[i] = idtf[i].real();
+	}
+	return IDTF;
+}
+
+
 double* Mk(complex<double>* X, const int N) {
 	double* M = new double[N];
 	for (int i = 0; i < N; i++)
@@ -121,8 +141,8 @@ int main() {
 	double a = 7;
 	double b = 6;
 	double c = 5;
-	double deltaT = 1 / 100.;
-	int length = (max - min) / deltaT;
+	double deltaT = 1 / 765.;
+	int length = 765;
 	double* tableX = new double[length];
 	double* tableY = new double[length];
 	double xtmp = min;
@@ -130,23 +150,35 @@ int main() {
 	for (int i = 0; i < length; i++)
 	{
 		tableX[i] = xtmp;
-		tableY[i] = s(xtmp, b, (c * M_PI));
+		tableY[i] = P(xtmp,42);
 		xtmp += deltaT;
 	}
+	GenerateData(tableX, tableY, length, "sin");
 
-	int size = pow(2, 12);
-	complex<double>* X = new complex<double>[size];
-	X = dft(tableY,size);
-	double* M = new double[size];
-	M = Mk(X, size);
-	double* Fk = new double[size];
+	complex<double>* X = new complex<double>[length];
+	double* Fk = new double[length];
+	double* Mprim = new double[length];
+	double* M = new double[length];
 
-	for (int i = 0; i < size; i++)
+	X = dft(tableY, length);
+	M = Mk(X, length);
+
+	for (int i = 0; i < length; i++)
+	{		
+		Mprim[i] = 10 * log10(M[i]);
+		if (Mprim[i] < 0) {
+			Mprim[i] = 0;
+		}
+	}
+	for (int i = 0; i < length; i++)
 	{
-		Fk[i] = (double)i * (1 / deltaT) / size;
+		Fk[i] = i * (1 / deltaT) / length;
 	}
 
-	GenerateData(Fk, M, size, "dft.plt");
+	GenerateData(Fk, Mprim, length, "dtf");
+	double* IDTF = idtf(X, length);
 
+	GenerateData(tableX, IDTF, length, "idtf");
+	
 	return 0;
  }
