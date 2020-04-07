@@ -134,6 +134,28 @@ double* Mk(complex<double>* X, const int N) {
 	return M;
 }
 
+
+double* Mp(double* M, const int N) {
+	double* Mprim = new double[N];
+	for (int i = 0; i < N; i++)
+	{
+		Mprim[i] = 10 * log10(M[i]);
+		if (Mprim[i] < 0) {
+			Mprim[i] = 0;
+		}
+	}
+	return Mprim;
+}
+
+double* FK(const int N, double deltaT) {
+	double* Fk = new double[N];
+	for (int i = 0; i < N; i++)
+	{
+		Fk[i] = i * (1 / deltaT) / N;
+	}
+	return Fk;
+}
+
 int main() {
 	
 	int min = 0;
@@ -156,28 +178,19 @@ int main() {
 	GenerateData(tableX, tableY, length, "sin");
 
 	complex<double>* X = new complex<double>[length];
-	double* Fk = new double[length];
+	 
 	double* Mprim = new double[length];
 	double* M = new double[length];
+	double* Fk = new double[length];
 
 	X = dft(tableY, length);
 	M = Mk(X, length);
-
-	for (int i = 0; i < length; i++)
-	{		
-		Mprim[i] = 10 * log10(M[i]);
-		if (Mprim[i] < 0) {
-			Mprim[i] = 0;
-		}
-	}
-	for (int i = 0; i < length; i++)
-	{
-		Fk[i] = i * (1 / deltaT) / length;
-	}
+	Mprim = Mp(M,length);
+	Fk = FK(length, deltaT);
 
 	GenerateData(Fk, Mprim, length, "dtf");
-	double* IDTF = idtf(X, length);
 
+	double* IDTF = idtf(X, length);
 	GenerateData(tableX, IDTF, length, "idtf");
 	
 	return 0;
