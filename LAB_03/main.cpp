@@ -106,20 +106,16 @@ complex<double>* dft(double* tab, const int N) {
 	return dtf;
 }
 
-double* idtf(complex<double> *tab, const int N) {
-	complex<double>* idtf = new complex<double>[N];
+double* idtf(complex<double>* tab, int N) {
+	double* IDTF = new double[N];
 	complex<double> i(0.0, 1);
 	for (int n = 0; n < N; n++) {
+		IDTF[n] = 0;
 		for (int k = 0; k < N; k++) {
-			double m = 2 * M_PI * k * n / N;
-			idtf[k] += (tab[n] * complex<double>(pow(exp(1.0),i*m)));
+			complex<double> wn = exp((i * 2.0 * M_PI) / (double)N);
+			IDTF[n] += (tab[k] * pow(wn, n * k)).real();
 		}
-		idtf[n] *= 1 / N;
-	}
-	double* IDTF = new double[N];
-	for (int i = 0; i < N; i++)
-	{
-		IDTF[i] = idtf[i].real();
+		IDTF[n] = IDTF[n] / N;
 	}
 	return IDTF;
 }
@@ -172,7 +168,7 @@ int main() {
 	for (int i = 0; i < length; i++)
 	{
 		tableX[i] = xtmp;
-		tableY[i] = P(xtmp,42);
+		tableY[i] = s(xtmp);
 		xtmp += deltaT;
 	}
 	GenerateData(tableX, tableY, length, "sin");
