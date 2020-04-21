@@ -1,5 +1,5 @@
-za	Szerokosc pasma:1HZ ka_a = 0.5;
-zp	Szerokosc pasma : 10HZ  kp_a = 1.5;
+za	Szerokosc pasma:1HZ ka_a = 0;
+zp	Szerokosc pasma : 1HZ  kp_a = 1;
 za	Szerokosc pasma : 7HZ ka_b = 7;
 zp	Szerokosc pasma : 13HZ kp_b = 2;
 za	Szerokosc pasma : 7HZ ka_c = 68;
