@@ -1,8 +1,6 @@
-/*
-	Szerokosc pasma:1HZ
-	Szerokosc pasma : 10HZ
-	Szerokosc pasma : 7HZ
-	Szerokosc pasma : 13HZ
-	Szerokosc pasma : 7HZ
-	Szerokosc pasma : 412HZ
-	*/
+za	Szerokosc pasma:1HZ ka_a = 0.5;
+zp	Szerokosc pasma : 10HZ  kp_a = 1.5;
+za	Szerokosc pasma : 7HZ ka_b = 7;
+zp	Szerokosc pasma : 13HZ kp_b = 2;
+za	Szerokosc pasma : 7HZ ka_c = 68;
+zp	Szerokosc pasma : 412HZ kp_c = 77;
