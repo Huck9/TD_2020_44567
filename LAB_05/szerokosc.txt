@@ -1,0 +1,8 @@
+/*
+	Szerokosc pasma:1HZ
+	Szerokosc pasma : 10HZ
+	Szerokosc pasma : 7HZ
+	Szerokosc pasma : 13HZ
+	Szerokosc pasma : 7HZ
+	Szerokosc pasma : 412HZ
+	*/
