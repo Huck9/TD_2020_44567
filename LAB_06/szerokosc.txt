@@ -1,0 +1,3 @@
+Szerokosc pasma:0.25HZ
+Szerokosc pasma:90.25HZ
+Szerokosc pasma:10.25HZ

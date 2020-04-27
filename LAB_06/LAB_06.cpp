@@ -105,17 +105,16 @@ string reverse(string const& s)
 	return rev;
 }
 
-string tobyte(string a,int sw ) {
+string tobyte(string a,bool sw ) {
 	int length = a.length();
 	string bit;
 	for (int i = 0; i < length; i++)
 	{
 		bitset<8> b = (bitset<8>)(int(a[i]));
-		if (sw == 1)
+		if (sw == true)
 		{
 			//little indian
 			string c = b.to_string();
-			
 			bit += reverse(c);
 		}
 		else {
@@ -126,8 +125,109 @@ string tobyte(string a,int sw ) {
 	return bit;
 }
 
+double ASK(double x, double y,int A1, int A2, int N,double Tb) {
+	int f = N / Tb;
+	if (y == 0) {
+		return (A1 * sin(2 * M_PI * f*  x));
+	}
+	else {
+		return (A2 * sin(2 * M_PI * f*  x));
+	}
+}
+
+double FSK(double x, double y, int A, int N, double Tb) {
+
+	if (y == 0) {
+		return (A * sin(2 * M_PI * ((N)/Tb) * x));
+	}
+	else {
+		return (A * sin(2 * M_PI * ((N *10) / Tb) * x));
+	}
+}
+
+double PSK(double x, double y, int A, int N, double Tb) {
+	int f = N / Tb;
+	if (y == 0) {
+	
+		return (A * sin(2 * M_PI * f * x));
+	}
+	else {
+		return (A * sin(2 * M_PI * f * x + M_PI));
+	}
+}
+
 int main()
 {
-	cout << tobyte("a", 1) << endl;
-	cout << tobyte("a", 2) << endl;
+	string byte = tobyte("haslo", true);
+	double A = 4;
+	double A1 = 0;
+	double A2 = 4;
+	double Tb = 0.1;
+	int N = 1;
+	int czestotlowosc = 8000;
+	int length = Tb * czestotlowosc * byte.length();
+	double* tableX = new double[length];
+	double* tableY = new double[length];
+	double* tableYASK = new double[length];
+	double* tableYFSK = new double[length];
+	double* tableYPSK = new double[length];
+	double xtmp = 0;
+	for (int i = 0; i < byte.length(); i++)
+	{
+		int a = byte[i] - '0';
+		for (int j = i*Tb*czestotlowosc; j < (i+1)*Tb*czestotlowosc; j++)
+		{
+			tableY[j] = a;
+			tableX[j] = j* 1./czestotlowosc;
+		}
+	}
+	
+	GenerateData(tableX, tableY, length, "bit");
+
+	for (int i = 0; i < length; i++)
+	{
+		tableYASK[i] = ASK(tableX[i], tableY[i], A1, A2, N, Tb);
+	}
+	GenerateData(tableX, tableYASK, length, "ASK");
+
+	for (int i = 0; i < length; i++)
+	{
+		tableYFSK[i] = FSK(tableX[i], tableY[i], A, N, Tb);
+	}
+	GenerateData(tableX, tableYFSK, length, "FSK");
+
+	for (int i = 0; i < length; i++)
+	{
+		tableYPSK[i] = PSK(tableX[i], tableY[i], A, N, Tb);
+	}
+	GenerateData(tableX, tableYPSK, length, "PSK");
+
+
+	complex<double>* X = new complex<double>[length];
+	double* Mprim = new double[length];
+	double* M = new double[length];
+	double* Fk = new double[length];
+
+	X = dft(tableYASK, length);
+	M = Mk(X, length);
+	Mprim = Mp(M, length);
+	Fk = FK(length, 1./czestotlowosc);
+	max(length, Mprim, Fk);
+	GenerateData(Fk, Mprim, length, "dtf_za");
+
+	X = dft(tableYFSK, length);
+	M = Mk(X, length);
+	Mprim = Mp(M, length);
+	Fk = FK(length, 1. / czestotlowosc);
+	max(length, Mprim, Fk);
+	GenerateData(Fk, Mprim, length, "dtf_zf");
+
+	X = dft(tableYPSK, length);
+	M = Mk(X, length);
+	Mprim = Mp(M, length);
+	Fk = FK(length, 1. / czestotlowosc);
+	max(length, Mprim, Fk);
+	GenerateData(Fk, Mprim, length, "dtf_zp");
+
+
 }
