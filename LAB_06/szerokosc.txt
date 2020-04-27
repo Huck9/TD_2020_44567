@@ -1,3 +1,4 @@
+Tajne : 0001011010000110110011100011011011110110
 Szerokosc pasma:0.25HZ
 Szerokosc pasma:90.25HZ
 Szerokosc pasma:10.25HZ
