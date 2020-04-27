@@ -1,0 +1,3 @@
+Szerokosc pasma ASK:0.25HZ
+Szerokosc pasma FSK:90.25HZ
+Szerokosc pasma PSK:10.25HZ
