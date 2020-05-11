@@ -232,7 +232,7 @@ int main()
 	double* tableYN = new double[length];
 	double* tableYB = new double[length];
 	double xtmp = 0;
-	
+	//ttl
 	for (int i = 0; i < byte.length(); i++)
 	{
 		int a = byte[i] - '0';
@@ -245,7 +245,7 @@ int main()
 	
 	GenerateData(tableX, tableYTTL, length, "TTL");
 	
-	
+	//clk
 	for (int i = 0; i < byte.length(); i++)
 	{
 		int a = 1;
@@ -261,6 +261,7 @@ int main()
 
 	}
 	GenerateData(tableX, tableY, length, "CLK");
+	//manchester
 	int a = 0;
 	int b = byte[0] - '0';
 	for (int i = 0; i < byte.length(); i++)
@@ -295,40 +296,7 @@ int main()
 		}
 	}
 	GenerateData(tableX, tableYM, length, "manchester");
-	a = 0;
-	for (int i = 0; i < byte.length(); i++)
-	{
-		b = byte[i] - '0';
-		if (i == 0) {
-			a = 0;
-		}
-		else {
-			if (b == 1) {
-				a = 1;
-			}
-			else {
-				a = -1;
-			}
-		}
-		for (int j = i * Tb * czestotlowosc; j < (i * Tb * czestotlowosc + (i + 1) * Tb * czestotlowosc) / 2; j++)
-		{
-			tableYN[j] = a;
-		}
-
-		if (b == 1) {
-			a = -1;
-		}
-		else {
-			a = 1;
-		}
-	
-		for (int j = (i * Tb * czestotlowosc + (i + 1) * Tb * czestotlowosc) / 2; j < (i + 1) * Tb * czestotlowosc; j++)
-		{
-			tableYN[j] = a;
-		}
-	}
-	GenerateData(tableX, tableYM, length, "manchester");
-
+	//nrzi
 	a = 0;
 	int flag = a;
 
@@ -341,7 +309,7 @@ int main()
 		}
 		for (int j = i * Tb * czestotlowosc; j < (i * Tb * czestotlowosc + (i + 1) * Tb * czestotlowosc) / 2; j++)
 		{
-			tableYM[j] = a;
+			tableYN[j] = a;
 		}
 		if (i == 0 && b ==1) {
 			a = 1;
@@ -352,12 +320,12 @@ int main()
 
 		for (int j = (i * Tb * czestotlowosc + (i + 1) * Tb * czestotlowosc) / 2; j < (i + 1) * Tb * czestotlowosc; j++)
 		{
-			tableYM[j] = a;
+			tableYN[j] = a;
 		}
 	}
-	GenerateData(tableX, tableYM, length, "nrzi");
+	GenerateData(tableX, tableYN, length, "nrzi");
 
-
+	//bami
 	a = 0;
 	flag = a;
 	int flag1 = -1;
@@ -381,12 +349,114 @@ int main()
 		}
 		for (int j = i * Tb * czestotlowosc; j < (i * Tb * czestotlowosc + (i + 1) * Tb * czestotlowosc) / 2; j++)
 		{
-			tableYM[j] = a;
+			tableYB[j] = a;
 		}
 		for (int j = (i * Tb * czestotlowosc + (i + 1) * Tb * czestotlowosc) / 2; j < (i + 1) * Tb * czestotlowosc; j++)
 		{
-			tableYM[j] = a;
+			tableYB[j] = a;
 		}
 	}
-	GenerateData(tableX, tableYM, length, "bami");
+	GenerateData(tableX, tableYB, length, "bami");
+
+	//dekodowanie ttl
+	int* ttl = new int[byte.length()];
+
+	for (int i = 0; i < byte.length(); i++)
+	{
+		a = 0;
+		for (int j = i * Tb * czestotlowosc; j < (i + 1) * Tb * czestotlowosc; j++)
+		{
+			a = tableYTTL[j-1];
+		}
+		ttl[i] = a;
+	}
+	cout << "TTL: ";
+	for (int i = 0; i < byte.length(); i++)
+	{
+		cout << ttl[i];
+
+	}
+	cout << endl;
+
+	//dekodowanie manchester
+	int* manchester = new int[byte.length()];
+	int o = Tb * czestotlowosc * 0.25;
+	for (int i = 0; i < byte.length(); i++)
+	{
+
+		for (int j = i * Tb * czestotlowosc + o ; j < (i * Tb * czestotlowosc+o  + (i + 1) * Tb * czestotlowosc+o ) / 2; j++)
+		{
+			a = tableYM[j];
+		}
+		if (a == 1) {
+			manchester[i] = 0;
+		}
+		else {
+			manchester[i] = 1;
+		}
+	}
+	cout << "Manchester: ";
+
+	for (int i = 0; i < byte.length(); i++)
+	{
+		cout << manchester[i];
+	}
+	cout << endl;
+	//dekodowanie nrzi
+	int* nrzi = new int[byte.length()];
+
+	for (int i = 0; i < byte.length(); i++)
+	{
+
+		for (int j = i * Tb * czestotlowosc; j < (i * Tb * czestotlowosc + (i + 1) * Tb * czestotlowosc) / 2; j++)
+		{
+			a = tableYN[j-1];
+		}
+		if (a >= 0) {
+			nrzi[i] = 1;
+		}
+		else {
+			nrzi[i] = 0;
+		}
+		for (int j = (i * Tb * czestotlowosc + (i + 1) * Tb * czestotlowosc) / 2; j < (i + 1) * Tb * czestotlowosc; j++)
+		{
+			a = tableYN[j];
+		}
+	}
+	cout << "NRZI: ";
+
+	for (int i = 0; i < byte.length()-1; i++)
+	{
+		nrzi[i] = nrzi[i] ^ nrzi[i+1];
+	}
+
+	for (int i = 0; i < byte.length(); i++)
+	{
+		cout << nrzi[i];
+	}
+	cout << endl;
+
+	//dekodowanie bami
+	int* bami = new int[byte.length()];
+
+	for (int i = 0; i < byte.length(); i++)
+	{
+		a = 0;
+		for (int j = i * Tb * czestotlowosc; j < (i + 1) * Tb * czestotlowosc; j++)
+		{
+			a = tableYB[j - 1];
+		}
+		if (a != 0) {
+			bami[i] = 1;
+		}
+		else {
+			bami[i] = 0;
+		}
+	}
+	cout << "Bami: ";
+	for (int i = 0; i < byte.length(); i++)
+	{
+		cout << bami[i];
+
+	}
 }
