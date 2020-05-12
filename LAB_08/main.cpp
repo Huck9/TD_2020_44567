@@ -427,7 +427,14 @@ int main()
 
 	for (int i = 0; i < byte.length()-1; i++)
 	{
-		nrzi[i] = nrzi[i] ^ nrzi[i+1];
+		if (i != 0)
+		{
+			nrzi[i] = nrzi[i] ^ nrzi[i + 1];
+		}
+		else {
+			nrzi[i] = 0;
+		}
+		
 	}
 
 	for (int i = 0; i < byte.length(); i++)
