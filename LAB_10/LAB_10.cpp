@@ -100,12 +100,7 @@ int main()
 		d1T[i][0] = d1[i];
 		cout <<"|"<< d1T[i][0]<< "|" << endl;
 	}
-	/*cout << endl;
-	for (int i = 0; i < 4; i++)
-	{
-		d2T[i][0] = d2[i];
-		cout << d2T[i][0] << endl;
-	}*/
+	
 	for (int i = 0; i < 7; i++)
 	{
 		K[i][0] = 0;
@@ -159,11 +154,13 @@ int main()
 	}
 
 	cout << "Miejsce blednego bitu: " << blad << endl;
-	K[blad-1][0] = (K[blad-1][0] == 1) ? 0 : 1;
-	cout << "macierz K po naprawie:" << endl;
-	for (int i = 0; i < 7; i++)
-	{
-		cout << "|" << K[i][0] << "|" << endl;
+	if (blad != 0) {
+		K[blad - 1][0] = (K[blad - 1][0] == 1) ? 0 : 1;
+		cout << "macierz K po naprawie:" << endl;
+		for (int i = 0; i < 7; i++)
+		{
+			cout << "|" << K[i][0] << "|" << endl;
+		}
 	}
 	cout <<"SECDEDS"<< endl;
 	//SECDEDS
@@ -191,7 +188,7 @@ int main()
 	{
 		sum += Ks[i][0];
 	}
-
+	sum = sum % 2;
 	if (sum != Ks[7][0])
 	{
 		cout << "Blad bitu" << endl;
@@ -234,7 +231,7 @@ int main()
 	{
 		sum += Ks[i][0];
 	}
-
+	sum = sum % 2;
 	if (sum != Ks[7][0])
 	{
 		cout << "Blad bitu" << endl;
