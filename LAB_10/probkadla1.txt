@@ -1,0 +1,84 @@
+1101000
+macierz G
+| 1 1 0 1|
+| 1 0 1 1|
+| 1 0 0 0|
+| 0 1 1 1|
+| 0 1 0 0|
+| 0 0 1 0|
+| 0 0 0 1|
+macierz H
+| 1 0 1 0 1 0 1|
+| 0 1 1 0 0 1 1|
+| 0 0 0 1 1 1 1|
+Pakiet:1101
+Macierz transponowana:
+|1|
+|1|
+|0|
+|1|
+
+macierz K:
+|1|
+|0|
+|1|
+|0|
+|1|
+|0|
+|1|
+macierz K przed naprawa:
+|1|
+|0|
+|0|
+|0|
+|1|
+|0|
+|1|
+Macierz S:
+|1|
+|1|
+|0|
+Miejsce blednego bitu: 3
+macierz K po naprawie:
+|1|
+|0|
+|1|
+|0|
+|1|
+|0|
+|1|
+SECDEDS
+Macierz k z 8 bitem:
+|1|
+|0|
+|1|
+|0|
+|1|
+|0|
+|1|
+|0|
+macierz K przed naprawa:
+|1|
+|0|
+|0|
+|0|
+|1|
+|0|
+|1|
+|0|
+Blad bitu
+Macierz S:
+|1|
+|1|
+|0|
+Miejsce blednego bitu: 3
+macierz K po naprawie:
+|1|
+|0|
+|1|
+|0|
+|1|
+|0|
+|1|
+|0|
+Ostatni bit ok
